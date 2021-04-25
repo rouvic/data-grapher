@@ -2,7 +2,7 @@
 
     import TableComp from "./TableComp.svelte";
 
-    import {data, graphOptions} from "./lib/common";
+    import {data, graphOptions} from "../lib/common";
 
     import {TaffyFilter} from "../lib/taffy_utils";
     import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../lib/tables";
