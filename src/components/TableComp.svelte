@@ -1,6 +1,6 @@
 <script>
 
-    import {Table, EmptyCell, SpannedCell} from "./lib/tables";
+    import {Table, EmptyCell, SpannedCell} from "../lib/tables";
     export let input = new Table([[]]);
     export let renderer = c => c;
 

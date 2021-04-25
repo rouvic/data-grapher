@@ -1,7 +1,7 @@
 <script>
-	import Graph from './Graph.svelte';
-	import DataForm from './DataForm.svelte';
-	import OptionsForm from './OptionsForm.svelte';
+	import Graph from './components/Graph.svelte';
+	import DataForm from './components/DataForm.svelte';
+	import OptionsForm from './components/OptionsForm.svelte';
 </script>
 
 <main>

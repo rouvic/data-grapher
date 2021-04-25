@@ -1,7 +1,7 @@
 <script>
-    import {graphOptions} from "./stores";
-    import {TreeNode} from "./lib/trees";
-    import {LabeledFilter, TaffyFilter} from "./lib/taffy_utils";
+    import {graphOptions} from "../lib/common";
+    import {TreeNode} from "../lib/trees";
+    import {LabeledFilter, TaffyFilter} from "../lib/taffy_utils";
 
 
     class Options {

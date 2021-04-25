@@ -2,11 +2,10 @@
 
     import TableComp from "./TableComp.svelte";
 
-    import {data, graphOptions} from "./stores";
+    import {data, graphOptions} from "./lib/common";
 
-    import {TreeNode} from "./lib/trees";
-    import {TaffyFilter} from "./lib/taffy_utils";
-    import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "./lib/tables";
+    import {TaffyFilter} from "../lib/taffy_utils";
+    import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../lib/tables";
 
     let localData;
     let localOptions;
