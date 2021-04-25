@@ -1,7 +1,7 @@
 <script>
 
     import {data, graphOptions} from "./stores";
-    import {TreeNode, LabeledFilter, TaffyFilter, TaffyAndFilter, buildIntegerRangeFilterTree} from "./lib";
+    import {TreeNode, LabeledFilter, TaffyFilter, BeingComputedTable} from "./lib";
     import TableComp from "./TableComp.svelte";
     import {Table, Cell, EmptyCell, HeadingCell} from "./tables";
 
@@ -11,7 +11,7 @@
     // transient, computed based on localData and localOptions
     let errorMessage;
     let queryCreator;
-    let verticalFilterTree, horizontalFilterTree;
+    let vFilterTree, hFilterTree;
     let computedTable, cellRenderer;
     let horizontalHeading, verticalHeading;
 
@@ -28,7 +28,7 @@
     // ---------- ACTUAL RENDERING ----------
     function repaint() {
         // Empty current graph
-        errorMessage = queryCreator = undefined;
+        errorMessage = queryCreator = computedTable = cellRenderer = undefined;
         if (!localOptions) {
             errorMessage = "No options";
             return;
@@ -44,7 +44,13 @@
         // Data accessor: filters the global input with provided filter.
         queryCreator = () => globalFilter.filter(localData());
 
-        let hTree = buildIntegerRangeFilterTree("date", 1900, 1920, 2);
+        // let hTree = buildIntegerRangeFilterTree("date", 1900, 1920, 2);
+
+        let hTree = new TreeNode(new LabeledFilter("Date", TaffyFilter.any()));
+        hTree.children.push(new TreeNode(new LabeledFilter("Date begins with 18", TaffyFilter.columnWithOperator("date", "left", "18"))));
+        hTree.children.push(new TreeNode(new LabeledFilter("Any date", TaffyFilter.any())));
+        hTree.children.push(new TreeNode(new LabeledFilter("Date ends with 12", TaffyFilter.columnWithOperator("date", "right", "12"))));
+
         let vTree = new TreeNode(new LabeledFilter("any composer", TaffyFilter.any()));
         let french = new TreeNode(new LabeledFilter("french composer"), TaffyFilter.any());
         french.children.push(new TreeNode(new LabeledFilter("Berlioz", TaffyFilter.columnsAre("composer", "Berlioz"))));
@@ -69,7 +75,7 @@
         }
 
         computedTable = [];
-        let allowColSpan = false;
+        let allowColSpan = true;
 
         let leavesMaxHeight = [];
 
@@ -79,30 +85,24 @@
             maxHeight = Math.max(maxHeight, 1);
             leavesMaxHeight[recordsRowIndex] = maxHeight;
 
-            let calculatedRows = [];
-
-            for (let i = 0; i < maxHeight; i++) {
-                let emptyRow = [];
-
-                for (let j = 0; j < hTree.leavesCount(); j++) {
-                    emptyRow.push(EmptyCell.INSTANCE);
-                }
-
-                calculatedRows.push(emptyRow);
-            }
+            let calculatedRows = new BeingComputedTable(maxHeight, hTree.leavesCount());
 
             recordsRow.forEach((recordsCell, column) => {
-                if (!allowColSpan) {
-                    for (const [line, record] of recordsCell.entries()) {
-                        calculatedRows[line][column] = new Cell(record);
+                for (const record of recordsCell) {
+                    let span = 1;
+
+                    if (allowColSpan) {
+                        while (column + span < recordsRow.length && recordsRow[column + span].includes(record)) {
+                            recordsRow[column + span] = recordsRow[column + span].filter(x => x !== record);
+                            span++;
+                        }
                     }
-                }
-                else {
-                    // TODO: colspan
+
+                    calculatedRows.insertInColumn(column, new Cell(record, span));
                 }
             });
 
-            computedTable.push(...calculatedRows);
+            computedTable.push(...calculatedRows.getValue());
         }
 
         // headings

@@ -53,7 +53,7 @@ export class SpannedCell extends Cell {
     }
 
     static withSpan(colspan, rowspan) {
-        return new EmptyCell(colspan, rowspan);
+        return new SpannedCell(colspan, rowspan);
     }
 }
 

@@ -1,12 +1,12 @@
 <script>
 
     import {data} from "./stores";
-    import {HardCoded1} from "./lib";
+    import {HardCoded2} from "./lib";
 
     let source = "hardcoded";
 
     function reloadData() {
-        let input = new HardCoded1().toTaffy();
+        let input = new HardCoded2().toTaffy();
 
         data.set(input);
     }
