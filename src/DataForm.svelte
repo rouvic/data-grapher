@@ -1,7 +1,7 @@
 <script>
 
     import {data} from "./stores";
-    import {HardCoded2} from "./lib";
+    import {HardCoded2} from "./lib/data_sources";
 
     let source = "hardcoded";
 

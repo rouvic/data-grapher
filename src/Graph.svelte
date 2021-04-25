@@ -1,9 +1,12 @@
 <script>
 
-    import {data, graphOptions} from "./stores";
-    import {TreeNode, LabeledFilter, TaffyFilter, BeingComputedTable} from "./lib";
     import TableComp from "./TableComp.svelte";
-    import {Table, Cell, EmptyCell, HeadingCell} from "./tables";
+
+    import {data, graphOptions} from "./stores";
+
+    import {TreeNode} from "./lib/trees";
+    import {TaffyFilter} from "./lib/taffy_utils";
+    import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "./lib/tables";
 
     let localData;
     let localOptions;
@@ -11,9 +14,8 @@
     // transient, computed based on localData and localOptions
     let errorMessage;
     let queryCreator;
-    let vFilterTree, hFilterTree;
+    let vTree, hTree;
     let computedTable, cellRenderer;
-    let horizontalHeading, verticalHeading;
 
     data.subscribe(value => {
         localData = value;
@@ -39,26 +41,13 @@
         }
 
         // Parsing the filter
-        let globalFilter = new TaffyFilter(JSON.parse(localOptions.filter));
+        let globalFilter = new TaffyFilter(JSON.parse(localOptions.globalFilter));
 
         // Data accessor: filters the global input with provided filter.
         queryCreator = () => globalFilter.filter(localData());
 
-        // let hTree = buildIntegerRangeFilterTree("date", 1900, 1920, 2);
-
-        let hTree = new TreeNode(new LabeledFilter("Date", TaffyFilter.any()));
-        hTree.children.push(new TreeNode(new LabeledFilter("Date begins with 18", TaffyFilter.columnWithOperator("date", "left", "18"))));
-        hTree.children.push(new TreeNode(new LabeledFilter("Any date", TaffyFilter.any())));
-        hTree.children.push(new TreeNode(new LabeledFilter("Date ends with 12", TaffyFilter.columnWithOperator("date", "right", "12"))));
-
-        let vTree = new TreeNode(new LabeledFilter("any composer", TaffyFilter.any()));
-        let french = new TreeNode(new LabeledFilter("french composer"), TaffyFilter.any());
-        french.children.push(new TreeNode(new LabeledFilter("Berlioz", TaffyFilter.columnsAre("composer", "Berlioz"))));
-        french.children.push(new TreeNode(new LabeledFilter("Debussy", TaffyFilter.columnsAre("composer", "Debussy"))));
-        french.children.push(new TreeNode(new LabeledFilter("Ravel", TaffyFilter.columnsAre("composer", "Ravel"))));
-        vTree.children.push(french);
-        vTree.children.push(new TreeNode(new LabeledFilter("Schönberg", TaffyFilter.columnsAre("composer", "Schönberg"))));
-        vTree.children.push(new TreeNode(new LabeledFilter("Stravinsky", TaffyFilter.columnsAre("composer", "Stravinsky"))));
+        let hTree = localOptions.horizontalFilterTree;
+        let vTree = localOptions.verticalFilterTree;
 
         let records = [];
 
@@ -75,8 +64,6 @@
         }
 
         computedTable = [];
-        let allowColSpan = true;
-
         let leavesMaxHeight = [];
 
         for (let [recordsRowIndex, recordsRow] of records.entries()) {
@@ -91,7 +78,7 @@
                 for (const record of recordsCell) {
                     let span = 1;
 
-                    if (allowColSpan) {
+                    if (localOptions.allowColumnSpan) {
                         while (column + span < recordsRow.length && recordsRow[column + span].includes(record)) {
                             recordsRow[column + span] = recordsRow[column + span].filter(x => x !== record);
                             span++;
@@ -111,10 +98,7 @@
         let verticalHeadingNeededColumns = 1 + verticalDepth;
         let horizontalHeadingNeededRows = 1 + horizontalDepth;
 
-        let horizontalHeading = true;
-        let verticalHeading = true;
-
-        if (horizontalHeading) {
+        if (localOptions.horizontalHeadingVisible) {
             let horizontalHeadingRows = [];
 
             for (let depth = 0; depth <= horizontalDepth; depth++) {
@@ -133,7 +117,7 @@
                 horizontalHeadingRows.push(row);
             }
 
-            if (verticalHeading) {
+            if (localOptions.verticalHeadingVisible) {
                 horizontalHeadingRows[0].unshift(EmptyCell.withSpan(verticalHeadingNeededColumns, horizontalHeadingNeededRows));
             }
 
@@ -141,8 +125,7 @@
         }
 
 
-        if (verticalHeading) {
-
+        if (localOptions.verticalHeadingVisible) {
             // Since the table is row major, we have to unshift to the existing rows.
             // We loop backwards because of the use of unshift method on rows.
             let rowspans = [];
@@ -178,7 +161,7 @@
 
                 let rowIndex = 0;
 
-                if (horizontalHeading) {
+                if (localOptions.horizontalHeadingVisible) {
                     rowIndex += horizontalHeadingNeededRows;
                 }
 
@@ -196,14 +179,14 @@
             }
         }
 
-
         computedTable = new Table(computedTable);
+
         cellRenderer = cell => {
             if (cell instanceof HeadingCell) {
                 return cell.value.value.label;
             }
             else {
-                return cell.value.title;
+                return cell.value.title + " (" + cell.value.date + ")";
             }
         };
     }
@@ -221,41 +204,6 @@
 </div>
 
 <style>
-
-    .sticky {
-        position: sticky;
-        background-color: white;
-    }
-
-    .top {
-        top:0;
-    }
-
-    .left {
-        left:0;
-    }
-
-    table {
-        border-spacing: 15px 15px;
-    }
-
-    td {
-        padding: 10px;
-        min-width: 200px;
-    }
-
-    td.heading {
-        font-weight: bold;
-    }
-
-    td.box {
-        border: 1px solid black;
-    }
-
-    .graph {
-        height: 100%;
-    }
-
     .graph-container {
         background-color: rgba(214,214,214,0.35);
         height: 600px;

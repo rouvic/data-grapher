@@ -1,5 +1,5 @@
 <script>
-    import {TreeNode} from "./lib";
+    import {TreeNode} from "./lib/common";
 
     export let node = new TreeNode(undefined);
 
