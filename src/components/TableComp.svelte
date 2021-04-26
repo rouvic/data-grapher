@@ -1,30 +1,12 @@
 <script>
 
-    import {Table, EmptyCell, SpannedCell} from "../lib/tables";
+    import {Table, EmptyCell, SpannedCell, HeadingCell} from "../lib/tables";
+    import RecordCell from "./RecordCell.svelte";
+    import Modal from "svelte-simple-modal";
+
     export let input = new Table([[]]);
     export let renderer = c => c;
-
 </script>
-
-<style>
-    table {
-        border-collapse: collapse;
-        border: 1px solid black;
-        border-spacing: 15px 15px;
-    }
-
-    td {
-        padding: 10px;
-    }
-
-    td.value {
-        border: 1px solid black;
-    }
-
-    td.empty {
-        border: none;
-    }
-</style>
 
 <table>
     {#each input.value as row}
@@ -37,13 +19,39 @@
                         <svelte:self input={cell} renderer={renderer}/>
                     </td>
                 {:else if cell instanceof SpannedCell}
-                    <!-- nothing -->
-                {:else}
-                    <td class="value" colspan="{cell.colspan}" rowspan="{cell.rowspan}">
+                <!-- nothing -->
+                {:else if cell instanceof HeadingCell}
+                    <td class="heading" colspan="{cell.colspan}" rowspan="{cell.rowspan}">
                         {renderer(cell)}
                     </td>
+                {:else}
+                    <Modal>
+                        <RecordCell cell={cell} />
+                    </Modal>
                 {/if}
             {/each}
         </tr>
     {/each}
 </table>
+
+<style>
+    table {
+        border-collapse: collapse;
+        border: 1px solid black;
+        border-spacing: 15px 15px;
+    }
+
+    td {
+        padding: 10px;
+    }
+
+    td.empty {
+        border: none;
+    }
+
+    td.heading {
+        position: sticky;
+        border: 1px solid black;
+    }
+</style>
+

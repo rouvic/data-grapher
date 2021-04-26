@@ -2,7 +2,7 @@
     import {graphOptions} from "../lib/common";
     import {TreeNode} from "../lib/trees";
     import {LabeledFilter, TaffyFilter} from "../lib/taffy_utils";
-
+    import {slide} from "svelte/transition";
 
     class Options {
         constructor() {
@@ -37,20 +37,47 @@
 
     // We load the default options.
     validateOptions();
+
+    let visible = false;
+
+    function toggleOptions() {
+        visible = !visible;
+    }
+
 </script>
 
-<div class="form options-form">
-    <p>
-        Filter :
-        <input bind:value={boundOptions.globalFilter}>
-        <br>
-        <button on:click={validateOptions}>Validate</button>
-    </p>
+
+<div class="toolbar-button-container">
+    <i class="fas fa-cogs toolbar-button" on:click={toggleOptions}></i>
+
+    {#if visible}
+        <div class="options-form" transition:slide>
+            <p>
+                Show horizontal heading :
+                <input type=checkbox bind:checked={boundOptions.horizontalHeadingVisible}>
+                <br>
+                Show vertical heading :
+                <input type=checkbox bind:checked={boundOptions.verticalHeadingVisible}>
+                <br>
+                Filter :
+                <input bind:value={boundOptions.globalFilter}>
+                <br>
+                <button on:click={validateOptions}>Validate</button>
+            </p>
+        </div>
+    {/if}
 </div>
+
 
 <style>
     .options-form {
         border: 1px solid rgba(180,180,180,0.35);
+        padding: 8px;
+        background: white;
+        z-index: 10;
+        position: absolute;
+        top: 26px;
+        right: 0;
     }
 </style>
 

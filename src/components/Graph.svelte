@@ -1,11 +1,14 @@
 <script>
-
     import TableComp from "./TableComp.svelte";
 
-    import {data, graphOptions} from "../lib/common";
+    import {dataStore, graphOptions} from "../lib/common";
 
     import {TaffyFilter} from "../lib/taffy_utils";
     import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../lib/tables";
+
+    import DataForm from './DataForm.svelte';
+    import OptionsForm from './OptionsForm.svelte';
+    import Fullscreen from "svelte-fullscreen";
 
     let localData;
     let localOptions;
@@ -16,7 +19,7 @@
     let vTree, hTree;
     let computedTable, cellRenderer;
 
-    data.subscribe(value => {
+    dataStore.subscribe(value => {
         localData = value;
         repaint();
     });
@@ -185,34 +188,55 @@
                 return cell.value.value.label;
             }
             else {
-                return cell.value.title + " (" + cell.value.date + ")";
+                return cell.value.title + " (" + cell.value.date + ") from " + cell.value._source;
             }
         };
     }
 
 </script>
 
-<div class="graph-container">
-    {#if errorMessage}
-        <p>{errorMessage}</p>
-    {:else}
-        <TableComp input={computedTable} renderer={cellRenderer} />
-    {/if}
-    <!--    <TableComp table={testTable} renderer="{cellRenderer2}"/>-->
-    <!--    <TableComp table={flattened} renderer="{cellRenderer2}"/>-->
-</div>
+<Fullscreen let:onToggle>
+    <div class="main">
+        <div class="graph-container">
+            {#if errorMessage}
+                <p>{errorMessage}</p>
+            {:else}
+                <TableComp input={computedTable} renderer={cellRenderer} />
+            {/if}
+        </div>
+
+        <div class="toolbar">
+            <OptionsForm></OptionsForm>
+            <DataForm></DataForm>
+            <div class="toolbar-button-container">
+                <i class="fas fa-expand toolbar-button" on:click={() => onToggle()}></i>
+            </div>
+        </div>
+    </div>
+</Fullscreen>
 
 <style>
     .graph-container {
+
+    }
+
+    .toolbar {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        display: flex;
+    }
+
+    .main {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 96vh;
         background-color: rgba(214,214,214,0.35);
-        height: 600px;
         margin: 0 auto;
         text-align: left;
         width: 96%;
+        height: 96vh;
         border: 3px solid #ff3e00;
-        overflow-x: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        position: relative;
     }
 </style>

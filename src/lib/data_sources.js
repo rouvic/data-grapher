@@ -5,12 +5,64 @@ export class DataSource {
     }
 }
 
-export class HardCoded1 extends DataSource {
+export class HardCoded extends DataSource {
+    constructor() {
+        super();
+        this.type = "HardCoded";
+        this.code = "// insert code here\n" +
+            "TAFFY()";
+    }
+
     toTaffy() {
+        return eval(this.code);
+    }
+}
+
+export class WikipediaSearch extends DataSource {
+
+    constructor() {
+        super();
+        this.type = "WikipediaSearch";
+        this.query = "";
+        this.srlimit = 200;
+        this.lang = "en";
+    }
+
+    async toTaffy() {
         let taffy = TAFFY();
 
-        // Input data
-        taffy().remove();
+        const endpoint = `https://${this.lang}.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=${this.srlimit}&srsearch=${this.query}`;
+
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw Error(response.statusText);
+        }
+
+        const json = await response.json();
+
+        json.query.search.forEach(result => {
+            console.log(result);
+            taffy.insert(result);
+        });
+
+
+
+
+        return taffy;
+    }
+}
+
+
+export class HardCoded1 extends DataSource {
+
+    constructor() {
+        super();
+        this.type = "HardCoded1";
+    }
+
+    toTaffy() {
+        let taffy = TAFFY();
 
         // Berlioz
         taffy.insert({title: "Symphonie fantastique", date: 1830, composer: "Berlioz"});
@@ -43,6 +95,11 @@ export class HardCoded1 extends DataSource {
 }
 
 export class HardCoded2 extends DataSource {
+    constructor() {
+        super();
+        this.type = "HardCoded2";
+    }
+
     toTaffy() {
         let taffy = TAFFY();
 
