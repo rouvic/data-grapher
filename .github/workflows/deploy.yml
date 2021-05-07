@@ -28,5 +28,5 @@ jobs:
         USERNAME: ${{ secrets.USER_NAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSH_KEY }}
-        script: cd ~/data-grapher-ci && npm run build
+        script: cd ~/data-grapher-ci && npm install && npm run build
 
