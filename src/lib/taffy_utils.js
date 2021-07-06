@@ -83,7 +83,6 @@ export class TaffyFilter {
         return new TaffyFilter(raw);
     }
 
-
     static columnWithOperator(column, operator, value) {
         const raw = {};
         raw[column] = {};
@@ -129,7 +128,7 @@ export class TaffyOrFilter extends TaffyFilter {
     }
 
     filter(query) {
-        return query().filter(this.value);
+        return query.filter(this.value);
     }
 
     toString() {

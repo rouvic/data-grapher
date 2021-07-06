@@ -8,6 +8,7 @@
     "start": "sirv public --no-clear"
   },
   "devDependencies": {
+    "@joshnuss/svelte-codemirror": "^0.2.4",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "rollup": "^2.3.4",
@@ -15,13 +16,12 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.35.0",
-    "svelte-simple-modal": "^0.10.0",
-    "taffydb": "^2.7.3"
+    "svelte": "^3.35.0"
   },
   "dependencies": {
+    "codemirror-show-hint": "^5.58.3",
     "sirv-cli": "^1.0.0",
-    "svelte-fullscreen": "^1.1.1",
-    "svelte-jsoneditor": "^0.0.15"
+    "svelte-jsoneditor": "^0.0.15",
+    "sveltestrap": "^5.0.2"
   }
 }

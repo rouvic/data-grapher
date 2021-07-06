@@ -1,13 +1,18 @@
 <script>
 
     import {dataStore} from "../lib/common";
-    import {HardCoded1, HardCoded2, HardCoded, WikipediaSearch} from "../lib/data_sources";
-    import {slide} from "svelte/transition";
+    import {HardCoded1, HardCoded2, HardCoded, WikipediaSearch, WikidataQuery, FromURL, FromFile} from "../lib/data_sources";
+    import {Tooltip, Icon, NavLink, Button, Offcanvas, Input, Form, FormGroup, Label} from "sveltestrap";
+    import ClickableIcon from "./ClickableIcon.svelte";
 
     class Labeled {
         constructor(label, value) {
             this.label = label;
             this.value = value;
+        }
+
+        toString() {
+            return "Labeled [label=" + this.label + ", value=" + this.value + "]";
         }
     }
 
@@ -26,72 +31,132 @@
         }
 
         dataStore.set(merged);
+
+        if (visible) {
+            toggle();
+        }
     }
 
     let visible = false;
-
-    function toggleVisible() {
-        visible = !visible;
-    }
+    const toggle = () => visible = !visible;
+    let buttonClickable = true;
 
     function removeItem(item) {
         localSources = localSources.filter(x => x !== item);
+        checkSourcesNames();
     }
 
     function addSource(source) {
         localSources = [...localSources, new Labeled("New data source", source)];
+        checkSourcesNames();
     }
+
+    function checkSourcesNames() {
+        buttonClickable = !checkForDuplicates(localSources.map(s => s.label));
+        for (let labeled of localSources) {
+            if (labeled.label.length === 0) {
+                buttonClickable = false;
+            }
+        }
+    }
+
+    function checkForDuplicates(array) {
+        let valuesAlreadySeen = [];
+
+        for (let i = 0; i < array.length; i++) {
+            let value = array[i];
+            if (valuesAlreadySeen.indexOf(value) !== -1) {
+                return true
+            }
+            valuesAlreadySeen.push(value)
+        }
+        return false
+    }
+
+    function isLabelDuplicate(label) {
+        let filtered = localSources.filter(source => (source.label === label));
+        return filtered.length > 1;
+    }
+
 
     // We load an empty data to start with.
     dispatchData();
 </script>
 
-<div class="toolbar-button-container">
-    <i class="fas fa-database toolbar-button" on:click|stopPropagation={toggleVisible}></i>
-</div>
 
-{#if visible}
-    <div class="data-form" transition:slide>
-        <div class="no-wrap">
+<NavLink on:click={toggle}>Data</NavLink>
+
+
+<div class="data-form-container">
+    <Offcanvas isOpen={visible} {toggle} placement="end" container="inline">
+
+        <div slot="header" class="no-wrap">
             Data Sources (add:
-            <i class="fas fa-plus pointed" on:click={() => addSource(new HardCoded1())}></i>
-            <i class="fas fa-code pointed" on:click={() => addSource(new HardCoded())}></i>
-            <i class="fas fa-file pointed" on:click={() => addSource(new HardCoded2())}></i>
-            <i class="fas fa-wifi pointed" on:click={() => addSource(new HardCoded2())}></i>
-            <i class="fab fa-wikipedia-w pointed" on:click={() => addSource(new WikipediaSearch())}></i>)
+            <ClickableIcon name="file-earmark-spreadsheet" tooltip="File" on:click={() => addSource(new FromFile())}/>
+            <ClickableIcon name="globe" tooltip="URL GET" on:click={() => addSource(new FromURL())}/>
+            <ClickableIcon name="code-slash" tooltip="Script" on:click={() => addSource(new HardCoded())}/>
+            <ClickableIcon name="globe" tooltip="Wikidata" on:click={() => addSource(new WikidataQuery())}/>
+            <ClickableIcon name="globe" tooltip="Wikipedia" on:click={() => addSource(new WikipediaSearch())}/>
+            <ClickableIcon name="bug" tooltip="debug" on:click={() => addSource(new HardCoded2())}/>
+            )
+            <div class="float-end">
+                <Button on:click={dispatchData} disabled="{!buttonClickable}">Reload</Button>
+            </div>
         </div>
+
+
         <ul>
             {#each localSources as labeled}
                 <li>
-                    <label>
-                        <input bind:value={labeled.label}>
-                        -
-                        {labeled.value.type}
+                    <Form>
+                        <FormGroup>
+                            <Label for="sourceIdId">
+                                Source ID (type: {labeled.value.type})
+                                <ClickableIcon name="trash" on:click={removeItem(labeled)}/>
+                            </Label>
+                            <Input invalid={isLabelDuplicate(labeled.label) || labeled.label.length === 0} feedback={isLabelDuplicate(labeled.label) ? "Name must be unique" : ""} bind:value={labeled.label} on:input={checkSourcesNames} name="sourceId" id="sourceIdId" placeholder="Source ID" />
+                        </FormGroup>
+                    </Form>
 
-                        <i class="fas fa-trash pointed" on:click={removeItem(labeled)}></i>
-                    </label>
 
-                    <div class="source-details">
-                        {#if labeled.value instanceof HardCoded}
-                            <label>
-                                <textarea style="min-width: 400px;" bind:value={labeled.value.code}></textarea>
-                            </label>
-                        {:else if labeled.value instanceof WikipediaSearch}
-                            <label>
-                                Query :
-                                <input bind:value={labeled.value.query} />
-                            </label>
-                        {/if}
-                    </div>
+                    {#if labeled.value.hasDetails()}
+                        <div class="source-details">
+                            {#if labeled.value instanceof HardCoded}
+                                <p>A hardcoded source used for debugging.</p>
+                            {:else if labeled.value instanceof WikipediaSearch}
+                                <label>
+                                    Query :
+                                    <input bind:value={labeled.value.query} />
+                                </label>
+                            {:else if labeled.value instanceof WikidataQuery}
+                                <label>
+                                    Query URL :
+                                    <input bind:value={labeled.value.url} />
+                                </label>
+                            {:else if labeled.value instanceof FromURL}
+                                <label>
+                                    Request URL :
+                                    <Input type="url" bind:value={labeled.value.url} />
+                                </label>
+                            {:else if labeled.value instanceof FromFile}
+                                <label>
+                                    File :
+                                    <Input type="file" bind:files={labeled.value.files} />
+                                </label>
+                            {/if}
+                        </div>
+                    {/if}
                 </li>
             {/each}
         </ul>
-        <button on:click={dispatchData}>Reload</button>
-    </div>
-{/if}
 
+    </Offcanvas>
+</div>
 
 <style>
+    :global(.data-form-container .offcanvas-end) {
+        width: 600px;
+    }
 
     li {
         margin-top: 20px;
@@ -100,19 +165,6 @@
     .source-details {
         border: 1px solid darkgray;
         padding: 8px;
-    }
-
-    .data-form {
-        border: 1px solid rgba(180,180,180,0.35);
-        padding: 8px;
-        background: white;
-        z-index: 10;
-        position: absolute;
-        top: 26px;
-        right: 0;
-        min-width: 600px;
-        overflow-x: auto;
-        overflow-y: auto;
     }
 </style>
 

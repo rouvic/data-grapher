@@ -12,7 +12,6 @@
 
 <style>
     span {
-        cursor: pointer;
         color: darkcyan;
     }
 </style>
@@ -20,7 +19,7 @@
 <ul>
     <li>
         {node.value}
-        <span on:click={toggleOpen} href="#">
+        <span class="pointed" on:click={toggleOpen}>
             {open ? "(open)" : "(closed)"}
         </span>
 

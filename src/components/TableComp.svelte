@@ -2,7 +2,6 @@
 
     import {Table, EmptyCell, SpannedCell, HeadingCell} from "../lib/tables";
     import RecordCell from "./RecordCell.svelte";
-    import Modal from "svelte-simple-modal";
 
     export let input = new Table([[]]);
     export let renderer = c => c;
@@ -25,9 +24,7 @@
                         {renderer(cell)}
                     </td>
                 {:else}
-                    <Modal>
-                        <RecordCell cell={cell} />
-                    </Modal>
+                    <RecordCell cell={cell} />
                 {/if}
             {/each}
         </tr>

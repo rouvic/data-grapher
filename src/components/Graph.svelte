@@ -8,7 +8,6 @@
 
     import DataForm from './DataForm.svelte';
     import OptionsForm from './OptionsForm.svelte';
-    import Fullscreen from "svelte-fullscreen";
 
     let localData;
     let localOptions;
@@ -195,48 +194,18 @@
 
 </script>
 
-<Fullscreen let:onToggle>
-    <div class="main">
-        <div class="graph-container">
-            {#if errorMessage}
-                <p>{errorMessage}</p>
-            {:else}
-                <TableComp input={computedTable} renderer={cellRenderer} />
-            {/if}
-        </div>
-
-        <div class="toolbar">
-            <OptionsForm></OptionsForm>
-            <DataForm></DataForm>
-            <div class="toolbar-button-container">
-                <i class="fas fa-expand toolbar-button" on:click={() => onToggle()}></i>
-            </div>
-        </div>
+<div class="main">
+    <div class="graph-container">
+        {#if errorMessage}
+            <p>{errorMessage}</p>
+        {:else}
+            <TableComp input={computedTable} renderer={cellRenderer} />
+        {/if}
     </div>
-</Fullscreen>
+</div>
 
 <style>
-    .graph-container {
-
-    }
-
-    .toolbar {
-        position: absolute;
-        top: 0;
-        right: 15px;
-        display: flex;
-    }
-
     .main {
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 96vh;
-        background-color: rgba(214,214,214,0.35);
-        margin: 0 auto;
-        text-align: left;
-        width: 96%;
-        height: 96vh;
-        border: 3px solid #ff3e00;
         position: relative;
     }
 </style>

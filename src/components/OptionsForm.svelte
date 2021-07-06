@@ -1,10 +1,15 @@
 <script>
-    import {graphOptions} from "../lib/common";
+    import {graphOptions, scripts} from "../lib/common";
     import {TreeNode} from "../lib/trees";
     import {LabeledFilter, TaffyFilter} from "../lib/taffy_utils";
-    import {slide} from "svelte/transition";
+
+    import {NavLink, Icon, Accordion, AccordionItem, Offcanvas, Button, Input, FormGroup} from 'sveltestrap';
+    import ScriptSelector from "./scripts/ScriptSelector.svelte";
+    import FilterTree from "./FilterTree.svelte";
+
 
     class Options {
+
         constructor() {
             this.horizontalFilterTree = new TreeNode(new LabeledFilter("any", TaffyFilter.any()));
             this.horizontalHeadingVisible = true;
@@ -12,12 +17,46 @@
             this.verticalHeadingVisible = true;
             this.allowColumnSpan = true;
             this.globalFilter = "{}";
+            this.displayer = scripts.get("built-in:name_and_dates_displayer");
+            this.horizontalFilterTree = new TreeNode(new LabeledFilter("Date", TaffyFilter.any()));
 
-            // this.horizontalFilterTree = new TreeNode(new LabeledFilter("Date", TaffyFilter.any()));
-            // this.horizontalFilterTree.children.push(new TreeNode(new LabeledFilter("Date begins with 18", TaffyFilter.columnWithOperator("date", "left", "18"))));
-            // this.horizontalFilterTree.children.push(new TreeNode(new LabeledFilter("Any date", TaffyFilter.any())));
-            // this.horizontalFilterTree.children.push(new TreeNode(new LabeledFilter("Date ends with 12", TaffyFilter.columnWithOperator("date", "right", "12"))));
             //
+
+            class TaffyFuncFilter extends TaffyFilter {
+
+                constructor(start, end) {
+                    super("");
+                    this.start = start;
+                    this.end = end;
+                    this.type = "custom";
+                }
+
+                filter(query) {
+                    let that = this;
+                    return query.filter(function () {
+                        let dob = Date.parse(this.date_of_birth);
+
+                        if (!this.date_of_death) {
+                            return dob <= that.end;
+                        }
+
+                        let dod = Date.parse(this.date_of_death);
+
+                        return (dob >= that.start && dob <= that.end) ||
+                                (that.start >= dob && that.start <= dod);
+                    });
+                }
+            }
+
+
+            for (let i = 1500; i < 2000; i += 10) {
+                let filter = new TaffyFuncFilter(Date.parse("" + i), Date.parse("" + (i + 10)));
+                let labeledFilter = new LabeledFilter(i, filter);
+                this.horizontalFilterTree.children.push(new TreeNode(labeledFilter));
+            }
+
+            this.horizontalFilterTree = new TreeNode(new LabeledFilter("any", TaffyFilter.any()));
+
             // this.verticalFilterTree = new TreeNode(new LabeledFilter("any composer", TaffyFilter.any()));
             // let french = new TreeNode(new LabeledFilter("french composer"), TaffyFilter.any());
             // french.children.push(new TreeNode(new LabeledFilter("Berlioz", TaffyFilter.columnsAre("composer", "Berlioz"))));
@@ -29,55 +68,53 @@
         }
     }
 
+    let visible = false;
+
+    function toggle() {
+        visible = !visible;
+    }
+
     let boundOptions = new Options();
 
     function validateOptions() {
         graphOptions.set(boundOptions);
+        if (visible) {
+            toggle();
+        }
     }
 
     // We load the default options.
     validateOptions();
 
-    let visible = false;
-
-    function toggleOptions() {
-        visible = !visible;
-    }
 
 </script>
 
 
-<div class="toolbar-button-container">
-    <i class="fas fa-cogs toolbar-button" on:click={toggleOptions}></i>
+<!--    <i class="fas fa-cogs toolbar-button" on:click={toggle}></i>-->
+    <NavLink on:click={toggle}>Options</NavLink>
 
-    {#if visible}
-        <div class="options-form" transition:slide>
-            <p>
-                Show horizontal heading :
-                <input type=checkbox bind:checked={boundOptions.horizontalHeadingVisible}>
-                <br>
-                Show vertical heading :
-                <input type=checkbox bind:checked={boundOptions.verticalHeadingVisible}>
-                <br>
-                Filter :
-                <input bind:value={boundOptions.globalFilter}>
-                <br>
-                <button on:click={validateOptions}>Validate</button>
-            </p>
-        </div>
-    {/if}
+<div class="options-form-container">
+    <Offcanvas isOpen={visible} {toggle} header="Options" placement="end" container="inline">
+        <h5>Horizontal heading</h5>
+            <FormGroup>
+                <Input type="checkbox" label="Show" bind:checked={boundOptions.horizontalHeadingVisible} />
+            </FormGroup>
+            <h4>Filter tree</h4>
+        <FilterTree bind:node={boundOptions.horizontalFilterTree}/>
+        <h5>Vertical heading</h5>
+            <FormGroup>
+                <Input type=checkbox label="Show" bind:checked={boundOptions.verticalHeadingVisible} />
+            </FormGroup>
+        <h5>Displayer</h5>
+                <ScriptSelector bind:value={boundOptions.displayer} />
+
+        <Button on:click={validateOptions}>Validate</Button>
+    </Offcanvas>
 </div>
 
-
 <style>
-    .options-form {
-        border: 1px solid rgba(180,180,180,0.35);
-        padding: 8px;
-        background: white;
-        z-index: 10;
-        position: absolute;
-        top: 26px;
-        right: 0;
+
+    :global(.options-form-container .offcanvas-end) {
+        width: 800px;
     }
 </style>
-
