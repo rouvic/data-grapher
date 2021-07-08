@@ -1,5 +1,5 @@
 <script>
-    import TableComp from "./TableComp.svelte";
+    import TableComp from "./utils/TableComp.svelte";
 
     import {dataStore, graphOptions} from "../lib/common";
 

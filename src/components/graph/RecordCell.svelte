@@ -2,7 +2,7 @@
     import {graphOptions, dataStore} from "../lib/common";
     import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "sveltestrap";
 
-    import CodeEditor from "./CodeEditor.svelte";
+    import CodeEditor from "./utils/CodeEditor.svelte";
 
     export let cell;
 

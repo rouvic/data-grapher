@@ -3,7 +3,7 @@
     import {dataStore} from "../lib/common";
     import {HardCoded1, HardCoded2, HardCoded, WikipediaSearch, WikidataQuery, FromURL, FromFile} from "../lib/data_sources";
     import {Tooltip, Icon, NavLink, Button, Offcanvas, Input, Form, FormGroup, Label} from "sveltestrap";
-    import ClickableIcon from "./ClickableIcon.svelte";
+    import ClickableIcon from "./utils/ClickableIcon.svelte";
 
     class Labeled {
         constructor(label, value) {

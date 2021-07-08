@@ -5,7 +5,7 @@
 
     import {Script, Parameter} from "../../lib/scripts";
 
-    import CodeEditor from "../CodeEditor.svelte";
+    import CodeEditor from "../utils/CodeEditor.svelte";
     let open = false;
     const toggle = () => open = !open;
 

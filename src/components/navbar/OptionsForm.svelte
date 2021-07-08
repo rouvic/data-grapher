@@ -5,7 +5,7 @@
 
     import {NavLink, Icon, Accordion, AccordionItem, Offcanvas, Button, Input, FormGroup} from 'sveltestrap';
     import ScriptSelector from "./scripts/ScriptSelector.svelte";
-    import FilterTree from "./FilterTree.svelte";
+    import FilterTree from "./utils/FilterTree.svelte";
 
 
     class Options {
