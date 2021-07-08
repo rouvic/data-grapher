@@ -1,56 +1,52 @@
 <script>
-    import {graphOptions} from "../lib/common";
-    import {Modal, ModalHeader, ModalBody} from "sveltestrap";
+    import {graphOptions, dataStore} from "../lib/common";
+    import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "sveltestrap";
+
+    import CodeEditor from "./CodeEditor.svelte";
+
     export let cell;
 
     let html;
 
+    let localOptions;
     graphOptions.subscribe(options => {
-        // html = window.eval.call(window,'(function (record) {'+value.displayer+'})')(cell.value);
-        let params = {record: cell.value};
-        html = options.displayer.run(params);
+        localOptions = options;
     });
-
-    function doubleClicked() {
-        alert("you double clicked on " + html);
-    }
 
     let modalOpen = false;
     const toggle = () => modalOpen = !modalOpen;
 
-
-
-    function syntaxHighlight(json) {
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var cls = 'number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    cls = 'key';
-                } else {
-                    cls = 'string';
-                }
-            } else if (/true|false/.test(match)) {
-                cls = 'boolean';
-            } else if (/null/.test(match)) {
-                cls = 'null';
-            }
-            return '<span class="' + cls + '">' + match + '</span>';
-        });
+    function removeRecord() {
+        toggle();
+        ($dataStore)().filter(cell.value).remove();
     }
+
+    let editor;
+
+    function saveRecord() {
+        toggle();
+        ($dataStore)().filter(cell.value).update(JSON.parse(editor.getValue()));
+    }
+
 
 </script>
 
-<td class="value pointed" colspan="{cell.colspan}" rowspan="{cell.rowspan}" on:dblclick={() => toggle()}>
-    {@html html}
+<td class="value pointed" colspan="{cell.colspan}" rowspan="{cell.rowspan}" on:click={() => toggle()}>
+    {@html localOptions.displayer.run({record: cell.value}) }
 </td>
 
 
 <Modal isOpen={modalOpen} toggle={toggle} size="xl">
-    <ModalHeader {toggle}>{html}</ModalHeader>
+    <ModalHeader {toggle}>{@html localOptions.displayer.run({record: cell.value}) }</ModalHeader>
     <ModalBody>
-        {@html syntaxHighlight(JSON.stringify(cell.value, null, 2))}
+        <CodeEditor bind:editor content={JSON.stringify(cell.value, null, 2)}/>
     </ModalBody>
+
+    <ModalFooter>
+        <Button color="success" on:click={() => saveRecord()}>Save</Button>
+        <Button color="danger" on:click={() => removeRecord()}>Remove</Button>
+        <Button color="secondary" on:click={toggle}>Cancel</Button>
+    </ModalFooter>
 </Modal>
 
 <style>

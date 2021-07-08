@@ -5,6 +5,7 @@
 
     export let input = new Table([[]]);
     export let renderer = c => c;
+
 </script>
 
 <table>

@@ -10,16 +10,15 @@
 
 
 <TopBar></TopBar>
-<main>
+<div class="main-container">
 	<Graph></Graph>
-</main>
+</div>
 
 <style>
-	main {
-		width: 96vw;
-		height: 100vh;
-		overflow-x: auto;
-		overflow-y: auto;
-		background-color: rgba(214,214,214,0.35);
+	.main-container {
+		overflow: auto;
+		/* TODO: fix this to occupy all the left space below navbar */
+		height: 90vh;
+		width: 100vw;
 	}
 </style>

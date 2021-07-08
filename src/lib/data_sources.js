@@ -227,7 +227,8 @@ export class HardCoded2 extends DataSource {
         let lastNames = ["Smith", "John", "Goodenough", "Carter", "Kengston", "Powel"];
 
         let name, dob, dod;
-        for (let i = 0; i < 100; i++) {
+        const COUNT = 10;
+        for (let i = 0; i < COUNT; i++) {
 
             let r = Math.floor(Math.random() * firstNames.length);
             name = firstNames[r];

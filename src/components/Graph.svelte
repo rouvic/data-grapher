@@ -17,9 +17,13 @@
     let queryCreator;
     let vTree, hTree;
     let computedTable, cellRenderer;
+    let tableComp;
 
     dataStore.subscribe(value => {
         localData = value;
+        localData.settings({onDBChange:function () {
+                repaint();
+            }});
         repaint();
     });
 
@@ -30,6 +34,7 @@
 
     // ---------- ACTUAL RENDERING ----------
     function repaint() {
+        console.log("REPAINTING GRAPH");
         // Empty current graph
         errorMessage = queryCreator = computedTable = cellRenderer = undefined;
         if (!localOptions) {
@@ -64,7 +69,7 @@
             records.push(row);
         }
 
-        computedTable = [];
+        let tempComputedTable = [];
         let leavesMaxHeight = [];
 
         for (let [recordsRowIndex, recordsRow] of records.entries()) {
@@ -90,7 +95,7 @@
                 }
             });
 
-            computedTable.push(...calculatedRows.getValue());
+            tempComputedTable.push(...calculatedRows.getValue());
         }
 
         // headings
@@ -122,7 +127,7 @@
                 horizontalHeadingRows[0].unshift(EmptyCell.withSpan(verticalHeadingNeededColumns, horizontalHeadingNeededRows));
             }
 
-            computedTable.unshift(...horizontalHeadingRows);
+            tempComputedTable.unshift(...horizontalHeadingRows);
         }
 
 
@@ -173,14 +178,16 @@
                         colspan = verticalDepth - depth + 1; // we add 1 because the colspan starts at 1.
                     }
 
-                    computedTable[rowIndex].unshift(HeadingCell.from(child, colspan, rowspan));
+                    tempComputedTable[rowIndex].unshift(HeadingCell.from(child, colspan, rowspan));
 
                     rowIndex += rowspan;
                 }
             }
         }
 
-        computedTable = new Table(computedTable);
+
+        console.log("CALLED =");
+        computedTable = new Table(tempComputedTable);
 
         cellRenderer = cell => {
             if (cell instanceof HeadingCell) {
@@ -192,17 +199,19 @@
         };
     }
 
+    function clicked() {
+        console.log("computed = " + computedTable.value);
+    }
+
 </script>
 
-<div class="main">
     <div class="graph-container">
         {#if errorMessage}
             <p>{errorMessage}</p>
         {:else}
-            <TableComp input={computedTable} renderer={cellRenderer} />
+            <TableComp input={computedTable} bind:renderer={cellRenderer} />
         {/if}
     </div>
-</div>
 
 <style>
     .main {

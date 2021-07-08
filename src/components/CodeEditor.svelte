@@ -9,7 +9,7 @@
 </script>
 
 <main>
-    <CodeMirror bind:editor options={{ lineNumbers: true, extraKeys: {"Ctrl-Space": "autocomplete"} }} value={content}/>
+    <CodeMirror bind:editor={editor} options={{ lineNumbers: true, extraKeys: {"Ctrl-Space": "autocomplete"} }} value={content}/>
 </main>
 
 <style>
