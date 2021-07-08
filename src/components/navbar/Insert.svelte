@@ -20,7 +20,7 @@
 <NavLink on:click={toggle}>Insert</NavLink>
 
 <Modal isOpen={open} toggle={toggle} size="xl">
-    <ModalHeader {toggle}>Scripts</ModalHeader>
+    <ModalHeader {toggle}>Insert a record</ModalHeader>
     <ModalBody>
         <CodeEditor bind:editor={editor} content={str} />
     </ModalBody>
