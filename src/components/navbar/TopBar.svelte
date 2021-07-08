@@ -7,11 +7,11 @@
         NavLink,
         Dropdown, DropdownItem, DropdownMenu, DropdownToggle
     } from 'sveltestrap';
-    import OptionsForm from "./OptionsForm.svelte";
-    import DataForm from "./DataForm.svelte";
+    import Options from "./Options.svelte";
+    import Sources from "./Sources.svelte";
     import Scripts from "./scripts/Scripts.svelte";
-    import ExportNavItem from "./ExportNavItem.svelte";
-    import AddRecord from "./AddRecord.svelte";
+    import Export from "./Export.svelte";
+    import Insert from "./Insert.svelte";
 
 </script>
 
@@ -19,19 +19,19 @@
     <NavbarBrand>data grapher</NavbarBrand>
         <Nav class="ms-0" navbar>
             <NavItem>
-                <AddRecord />
+                <Insert />
             </NavItem>
             <NavItem>
-                <ExportNavItem />
+                <Export />
             </NavItem>
             <NavItem>
-                <OptionsForm/>
+                <Options />
             </NavItem>
             <NavItem>
-                <DataForm/>
+                <Sources />
             </NavItem>
             <NavItem>
-                <Scripts/>
+                <Scripts />
             </NavItem>
         </Nav>
 </Navbar>

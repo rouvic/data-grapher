@@ -84,7 +84,7 @@
 </script>
 
 
-<NavLink on:click={toggle}>Data</NavLink>
+<NavLink on:click={toggle}>Sources</NavLink>
 
 
 <div class="data-form-container">

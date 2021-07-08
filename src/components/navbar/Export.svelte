@@ -23,4 +23,4 @@
 
 </script>
 
-<NavLink on:click={() => exportData()}>Export data</NavLink>
+<NavLink on:click={() => exportData()}>Export</NavLink>

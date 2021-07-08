@@ -6,8 +6,8 @@
     import {TaffyFilter} from "../../lib/taffy_utils";
     import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../../lib/tables";
 
-    import DataForm from '../navbar/DataForm.svelte';
-    import OptionsForm from '../navbar/OptionsForm.svelte';
+    import DataForm from '../navbar/Sources.svelte';
+    import OptionsForm from '../navbar/Options.svelte';
 
     let localData;
     let localOptions;
