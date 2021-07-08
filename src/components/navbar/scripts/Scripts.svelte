@@ -1,11 +1,11 @@
 <script>
     import { Input, NavLink, Icon, Modal, ModalBody, ModalHeader, ModalFooter, Button, TabPane, TabContent, Container, Row, Col, ListGroup, ListGroupItem} from 'sveltestrap';
 
-    import {scripts} from "../../lib/common";
+    import {scripts} from "../../../lib/common";
 
-    import {Script, Parameter} from "../../lib/scripts";
+    import {Script, Parameter} from "../../../lib/scripts";
 
-    import CodeEditor from "../utils/CodeEditor.svelte";
+    import CodeEditor from "../../utils/CodeEditor.svelte";
     let open = false;
     const toggle = () => open = !open;
 

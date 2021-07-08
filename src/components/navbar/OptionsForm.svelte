@@ -1,11 +1,11 @@
 <script>
-    import {graphOptions, scripts} from "../lib/common";
-    import {TreeNode} from "../lib/trees";
-    import {LabeledFilter, TaffyFilter} from "../lib/taffy_utils";
+    import {graphOptions, scripts} from "../../lib/common";
+    import {TreeNode} from "../../lib/trees";
+    import {LabeledFilter, TaffyFilter} from "../../lib/taffy_utils";
 
     import {NavLink, Icon, Accordion, AccordionItem, Offcanvas, Button, Input, FormGroup} from 'sveltestrap';
     import ScriptSelector from "./scripts/ScriptSelector.svelte";
-    import FilterTree from "./utils/FilterTree.svelte";
+    import FilterTree from "../utils/FilterTree.svelte";
 
 
     class Options {

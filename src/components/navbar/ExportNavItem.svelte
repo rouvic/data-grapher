@@ -1,7 +1,7 @@
 <script>
     import {NavLink} from "sveltestrap";
 
-    import {dataStore} from "../lib/common";
+    import {dataStore} from "../../lib/common";
 
     function download(filename, text) {
         let element = document.createElement('a');

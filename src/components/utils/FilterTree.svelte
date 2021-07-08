@@ -1,10 +1,10 @@
 <script>
-    import {TreeNode} from "../lib/trees";
-    import {TaffyFilter, LabeledFilter} from "../lib/taffy_utils";
+    import {TreeNode} from "../../lib/trees";
+    import {TaffyFilter, LabeledFilter} from "../../lib/taffy_utils";
 
     import {Input} from "sveltestrap";
     import ClickableIcon from "./ClickableIcon.svelte";
-    import {dataStore} from "../lib/common";
+    import {dataStore} from "../../lib/common";
 
     export let node = new TreeNode(undefined);
     export let removable = false;

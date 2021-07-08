@@ -8,7 +8,7 @@
         Input
         } from "sveltestrap";
 
-    import {scripts, isEmpty} from "../../lib/common";
+    import {scripts, isEmpty} from "../../../lib/common";
 
     let inputString;
 

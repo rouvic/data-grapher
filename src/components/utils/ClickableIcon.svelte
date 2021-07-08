@@ -1,7 +1,7 @@
 <script>
     export let name;
     import {Icon, Tooltip} from "sveltestrap";
-    import {isEmpty} from "../lib/common";
+    import {isEmpty} from "../../lib/common";
     export let tooltip = "";
     let id = "" + Math.random();
     id = id.substring(2, id.length);

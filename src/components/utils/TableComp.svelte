@@ -1,7 +1,7 @@
 <script>
 
-    import {Table, EmptyCell, SpannedCell, HeadingCell} from "../lib/tables";
-    import RecordCell from "./RecordCell.svelte";
+    import {Table, EmptyCell, SpannedCell, HeadingCell} from "../../lib/tables";
+    import RecordCell from "../graph/RecordCell.svelte";
 
     export let input = new Table([[]]);
     export let renderer = c => c;

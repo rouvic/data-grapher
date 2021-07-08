@@ -1,13 +1,13 @@
 <script>
-    import TableComp from "./utils/TableComp.svelte";
+    import TableComp from "../utils/TableComp.svelte";
 
-    import {dataStore, graphOptions} from "../lib/common";
+    import {dataStore, graphOptions} from "../../lib/common";
 
-    import {TaffyFilter} from "../lib/taffy_utils";
-    import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../lib/tables";
+    import {TaffyFilter} from "../../lib/taffy_utils";
+    import {Table, Cell, EmptyCell, HeadingCell, BeingComputedTable} from "../../lib/tables";
 
-    import DataForm from './DataForm.svelte';
-    import OptionsForm from './OptionsForm.svelte';
+    import DataForm from '../navbar/DataForm.svelte';
+    import OptionsForm from '../navbar/OptionsForm.svelte';
 
     let localData;
     let localOptions;
@@ -213,8 +213,3 @@
         {/if}
     </div>
 
-<style>
-    .main {
-        position: relative;
-    }
-</style>
