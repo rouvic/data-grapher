@@ -136,6 +136,64 @@ export class TaffyOrFilter extends TaffyFilter {
     }
 }
 
+export class TaffyDateRangeFilter extends TaffyFilter {
+
+    constructor(start, end) {
+        super("");
+        this.start = start;
+        this.end = end;
+        this.type = "DateRange";
+    }
+
+    filter(query) {
+        let that = this;
+        return query.filter(function () {
+            if (this.date) {
+                if (Array.isArray(this.date)) {
+                    for (let d of this.date) {
+                        if (that.start <= d && d <= that.end) {
+                            return true;
+                        }
+                    }
+                }
+                else {
+                    return that.start <= this.date && this.date <= that.end;
+                }
+            }
+            else if (this.date_of_birth) {
+                let dob = Date.parse(this.date_of_birth);
+
+                if (!this.date_of_death) {
+                    return dob <= that.end;
+                }
+
+                let dod = Date.parse(this.date_of_death);
+
+                return (dob >= that.start && dob <= that.end) ||
+                    (that.start >= dob && that.start <= dod);
+            }
+
+            return false;
+        });
+    }
+
+    toString() {
+        return "[" + this.start.toDateString() + " - " + this.end.toDateString() + "]";
+    }
+}
+
+export function buildDateRanges(startYear, endYear, step) {
+    let tree = new TreeNode(new LabeledFilter("Date", TaffyFilter.any()));
+
+    for (let i = startYear; i < endYear; i += step) {
+        let filter = new TaffyDateRangeFilter(new Date("" + i), new Date("" + (i + 10)));
+        let labeledFilter = new LabeledFilter(i, filter);
+        tree.children.push(new TreeNode(labeledFilter));
+    }
+
+    return tree;
+}
+
 // --- TAFFY UTILS ---
 
 /**
