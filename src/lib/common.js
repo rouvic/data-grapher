@@ -1,5 +1,6 @@
 import {writable} from "svelte/store";
 import {Script, Parameter} from "../lib/scripts";
+import {Options} from "./options";
 
 export class Registry extends Map {
     constructor() {
@@ -28,18 +29,20 @@ export class Registry extends Map {
         return [...this.entries()].filter(filter);
     }
 }
-export const dataSources = writable(undefined);
-export const dataStore = writable(undefined);
 
-export const graphOptions = writable(undefined);
-
-// TODO: change this array to a resource registry that allows domaining and labeling resources
+// Scripts declared first because new Options() usually needs this to be defined.
 export const scripts = new Registry();
 
 scripts.set("built-in:raw_displayer", new Script("Raw displayer", "Returns the raw record object", "return record;", [new Parameter("record", "The record to be displayed")]));
 scripts.set("built-in:json_displayer", new Script("JSON displayer", "Returns the record JSON representation", "return JSON.stringify(record);", [new Parameter("record", "The record to be displayed")]));
 scripts.set("built-in:name_displayer", new Script("Name displayer", "Returns the record's \"name\" attribute", "return record.name;", [new Parameter("record", "The record to be displayed")]));
 scripts.set("built-in:name_and_dates_displayer", new Script("Name and dates displayer", "Returns the name and dates of existence", "return record.name + \" (\" + record.date_of_birth + \" - \" + record.date_of_death + \")\";", [new Parameter("record", "The record to be displayed")]));
+
+export const dataSources = writable([]);
+export const dataStore = writable(TAFFY());
+
+export const graphOptions = writable(new Options());
+
 
 // UTILS
 /**

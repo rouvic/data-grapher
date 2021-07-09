@@ -54,6 +54,11 @@
         node.children = node.children.filter(x => x !== child);
         repaint();
     }
+
+    function clearNode() {
+        node.children.length = 0;
+        repaint();
+    }
 </script>
 
 <style>
@@ -82,6 +87,7 @@
         <ClickableIcon name="plus" tooltip="Add child" on:click={() => addChild()}/>
         <ClickableIcon name="sort-alpha-down" tooltip="Add distinct filters" on:click={() => addDistinctFilters()}/>
         <ClickableIcon name="sort-numeric-down" tooltip="Add numeric range filters" on:click={() => addChild()}/>
+        <ClickableIcon name="x-circle" tooltip="Clear" on:click={() => clearNode()}/>
 
         {#if removable}
             <ClickableIcon name="dash" on:click={() => removeThisFromParent()}/>

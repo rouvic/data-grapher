@@ -34,7 +34,6 @@
 
     // ---------- ACTUAL RENDERING ----------
     function repaint() {
-        console.log("REPAINTING GRAPH");
         // Empty current graph
         errorMessage = queryCreator = computedTable = cellRenderer = undefined;
         if (!localOptions) {
@@ -185,8 +184,6 @@
             }
         }
 
-
-        console.log("CALLED =");
         computedTable = new Table(tempComputedTable);
 
         cellRenderer = cell => {
@@ -198,11 +195,6 @@
             }
         };
     }
-
-    function clicked() {
-        console.log("computed = " + computedTable.value);
-    }
-
 </script>
 
     <div class="graph-container">

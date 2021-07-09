@@ -1,22 +1,15 @@
 <script>
 
-    import {dataStore} from "../../lib/common";
-    import {HardCoded1, HardCoded2, HardCoded, WikipediaSearch, WikidataQuery, FromURL, FromFile} from "../../lib/data_sources";
+    import {dataStore, dataSources} from "../../lib/common";
+    import {LabeledSource, HardCoded1, HardCoded2, HardCoded, WikipediaSearch, WikidataQuery, FromURL, FromFile} from "../../lib/data_sources";
     import {Tooltip, Icon, NavLink, Button, Offcanvas, Input, Form, FormGroup, Label} from "sveltestrap";
     import ClickableIcon from "../utils/ClickableIcon.svelte";
 
-    class Labeled {
-        constructor(label, value) {
-            this.label = label;
-            this.value = value;
-        }
-
-        toString() {
-            return "Labeled [label=" + this.label + ", value=" + this.value + "]";
-        }
-    }
-
     let localSources = [];
+
+    dataSources.subscribe(sources => {
+        localSources = sources;
+    });
 
     async function dispatchData() {
         let merged = TAFFY();
@@ -31,6 +24,8 @@
         }
 
         dataStore.set(merged);
+        dataSources.set(localSources);
+
 
         if (visible) {
             toggle();
@@ -47,7 +42,7 @@
     }
 
     function addSource(source) {
-        localSources = [...localSources, new Labeled("New data source", source)];
+        localSources = [...localSources, new LabeledSource("New data source", source)];
         checkSourcesNames();
     }
 

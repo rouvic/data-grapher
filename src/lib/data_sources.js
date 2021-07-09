@@ -12,6 +12,18 @@ export class DataSource {
     }
 }
 
+export class LabeledSource {
+    constructor(label, value) {
+        this.label = label;
+        this.value = value;
+    }
+
+    toString() {
+        return "Labeled [label=" + this.label + ", value=" + this.value + "]";
+    }
+}
+
+
 export class DataSourceWithDetails extends DataSource {
     hasDetails() {
         return true;
@@ -42,15 +54,13 @@ export class FromURL extends DataSourceWithDetails {
     constructor() {
         super();
         this.type = "FromURL";
-        this.url = "https://example.com/my-json-data";
+        this.url = "https://example.com/json-data";
     }
 
     async toTaffy() {
         let taffy = TAFFY();
 
         const response = await fetch(this.url);
-
-        console.log(response);
 
         if (!response.ok) {
             throw Error(response.statusText);

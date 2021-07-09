@@ -1,11 +1,16 @@
 <script>
 	import Graph from './components/graph/Graph.svelte';
 	import TopBar from './components/navbar/TopBar.svelte';
-	import EditorTest from "./components/utils/CodeEditor.svelte";
-	import {Container, Row, Col} from "sveltestrap";
-	import {Registry} from "./lib/common";
-	import ScriptInput from "./components/navbar/scripts/ScriptSelector.svelte";
+	import {applyHistMaths} from "./lib/presets";
 
+
+	const params = new URLSearchParams(window.location.search);
+
+	if (params.has("preset")) {
+		if (params.get("preset") === "hist-maths") {
+			applyHistMaths();
+		}
+	}
 </script>
 
 
