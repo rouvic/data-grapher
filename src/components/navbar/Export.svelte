@@ -23,4 +23,6 @@
 
 </script>
 
-<NavLink on:click={() => exportData()}>Export</NavLink>
+<tutorial id="export-button">
+    <NavLink on:click={() => exportData()}>Export</NavLink>
+</tutorial>

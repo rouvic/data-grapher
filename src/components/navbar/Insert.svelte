@@ -17,7 +17,9 @@
 
 </script>
 
-<NavLink on:click={toggle}>Insert</NavLink>
+<tutorial id="insert-button">
+    <NavLink on:click={toggle}>Insert</NavLink>
+</tutorial>
 
 <Modal isOpen={open} toggle={toggle} size="xl">
     <ModalHeader {toggle}>Insert a record</ModalHeader>

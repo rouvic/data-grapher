@@ -12,12 +12,16 @@
     import Scripts from "./scripts/Scripts.svelte";
     import Export from "./Export.svelte";
     import Insert from "./Insert.svelte";
+    import Tutorial from "./Tutorial.svelte";
 
 </script>
 
 <Navbar color="light" light expand="md">
     <NavbarBrand>data grapher</NavbarBrand>
         <Nav class="ms-0" navbar>
+            <NavItem>
+                <Tutorial />
+            </NavItem>
             <NavItem>
                 <Insert />
             </NavItem>

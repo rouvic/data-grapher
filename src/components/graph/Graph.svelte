@@ -197,7 +197,7 @@
     }
 </script>
 
-    <div class="graph-container">
+    <div class="graph-container" id="graph-container">
         {#if errorMessage}
             <p>{errorMessage}</p>
         {:else}

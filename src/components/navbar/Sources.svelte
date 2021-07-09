@@ -79,8 +79,9 @@
 </script>
 
 
-<NavLink on:click={toggle}>Sources</NavLink>
-
+<tutorial id="sources-button">
+    <NavLink on:click={toggle}>Sources</NavLink>
+</tutorial>
 
 <div class="data-form-container">
     <Offcanvas isOpen={visible} {toggle} placement="end" container="inline">

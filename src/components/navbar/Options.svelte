@@ -30,8 +30,9 @@
 </script>
 
 
-<!--    <i class="fas fa-cogs toolbar-button" on:click={toggle}></i>-->
+<tutorial id="options-button">
     <NavLink on:click={toggle}>Options</NavLink>
+</tutorial>
 
 <div class="options-form-container">
     <Offcanvas isOpen={visible} {toggle} header="Options" placement="end" container="inline">
