@@ -10,18 +10,10 @@ export class Options {
         this.verticalFilterTree = new TreeNode(new LabeledFilter("any", TaffyFilter.any()));
         this.verticalHeadingVisible = true;
         this.allowColumnSpan = true;
-        this.globalFilter = "{}";
-        this.displayer = scripts.get("built-in:name_and_dates_displayer");
+        this.displayText = scripts.get("built-in:name_and_dates_displayer");
+        this.backgroundColor = scripts.get("built-in:default_background");
 
         this.horizontalFilterTree = new TreeNode(new LabeledFilter("any", TaffyFilter.any()));
 
-        // this.verticalFilterTree = new TreeNode(new LabeledFilter("any composer", TaffyFilter.any()));
-        // let french = new TreeNode(new LabeledFilter("french composer"), TaffyFilter.any());
-        // french.children.push(new TreeNode(new LabeledFilter("Berlioz", TaffyFilter.columnsAre("composer", "Berlioz"))));
-        // french.children.push(new TreeNode(new LabeledFilter("Debussy", TaffyFilter.columnsAre("composer", "Debussy"))));
-        // french.children.push(new TreeNode(new LabeledFilter("Ravel", TaffyFilter.columnsAre("composer", "Ravel"))));
-        // this.verticalFilterTree.children.push(french);
-        // this.verticalFilterTree.children.push(new TreeNode(new LabeledFilter("Schönberg", TaffyFilter.columnsAre("composer", "Schönberg"))));
-        // this.verticalFilterTree.children.push(new TreeNode(new LabeledFilter("Stravinsky", TaffyFilter.columnsAre("composer", "Stravinsky"))));
     }
 }

@@ -45,11 +45,7 @@
             return;
         }
 
-        // Parsing the filter
-        let globalFilter = new TaffyFilter(JSON.parse(localOptions.globalFilter));
-
-        // Data accessor: filters the global input with provided filter.
-        queryCreator = () => globalFilter.filter(localData());
+        queryCreator = () => localData();
 
         let hTree = localOptions.horizontalFilterTree;
         let vTree = localOptions.verticalFilterTree;

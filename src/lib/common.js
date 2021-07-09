@@ -37,6 +37,7 @@ scripts.set("built-in:raw_displayer", new Script("Raw displayer", "Returns the r
 scripts.set("built-in:json_displayer", new Script("JSON displayer", "Returns the record JSON representation", "return JSON.stringify(record);", [new Parameter("record", "The record to be displayed")]));
 scripts.set("built-in:name_displayer", new Script("Name displayer", "Returns the record's \"name\" attribute", "return record.name;", [new Parameter("record", "The record to be displayed")]));
 scripts.set("built-in:name_and_dates_displayer", new Script("Name and dates displayer", "Returns the name and dates of existence", "return record.name + \" (\" + record.date_of_birth + \" - \" + record.date_of_death + \")\";", [new Parameter("record", "The record to be displayed")]));
+scripts.set("built-in:default_background", new Script("Default background", "Returns white", "\"white\"", [new Parameter("record", "The record to be displayed")]));
 
 export const dataSources = writable([]);
 export const dataStore = writable(TAFFY());

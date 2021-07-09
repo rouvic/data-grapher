@@ -9,6 +9,10 @@
                 intro: "data grapher is an open source software designed to collect and render data in a meaningful way."
             },
             {
+                element: document.querySelector('#graph-container'),
+                intro: "This is the main graph container. The graph will be rendered here once you've entered data."
+            },
+            {
                 element: document.querySelector('#sources-button'),
                 intro: "To get started you need to register one or more data sources."
             },

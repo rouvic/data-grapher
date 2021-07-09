@@ -31,13 +31,13 @@
 
 </script>
 
-<td class="value pointed" colspan="{cell.colspan}" rowspan="{cell.rowspan}" on:click={() => toggle()}>
-    {@html localOptions.displayer.run({record: cell.value}) }
+<td class="value pointed" style="background-color: {localOptions.backgroundColor.run({record: cell.value})};" colspan="{cell.colspan}" rowspan="{cell.rowspan}" on:click={() => toggle()}>
+    {@html localOptions.displayText.run({record: cell.value}) }
 </td>
 
 
 <Modal isOpen={modalOpen} toggle={toggle} size="xl">
-    <ModalHeader {toggle}>{@html localOptions.displayer.run({record: cell.value}) }</ModalHeader>
+    <ModalHeader {toggle}>{@html localOptions.displayText.run({record: cell.value}) }</ModalHeader>
     <ModalBody>
         <CodeEditor bind:editor content={JSON.stringify(cell.value, null, 2)}/>
     </ModalBody>
@@ -52,7 +52,6 @@
 <style>
     td.value {
         border: 1px solid black;
-        background-color: orange;
     }
 
     td {
